@@ -20,7 +20,6 @@ def calcular_costo_queso_fresco(costo_leche: float, cantidad_leche: float, costo
     float
         costo de queso fresco en pesos redondeado a dos cifras
     """
-    
     return round(costo_leche*cantidad_leche + costos_adicionales, 2)
 
 def calcular_cantidad_queso(cantidad_leche: float) -> float:
@@ -39,8 +38,6 @@ def calcular_cantidad_queso(cantidad_leche: float) -> float:
 
 def calcular_dias_maduracion(cantidad_leche: float, temperatura_almacenamiento: float, humedad_relativa: float) -> int:
     """
-    
-
     Parameters
     ----------
     cantidad_leche : float
@@ -56,13 +53,10 @@ def calcular_dias_maduracion(cantidad_leche: float, temperatura_almacenamiento: 
         calcula los dias de maduracion.
 
     """
-    
     return round(5 + 0.1*(humedad_relativa*calcular_cantidad_queso(cantidad_leche))/temperatura_almacenamiento)
 
 def calcular_costo_queso_madurado(costo_leche: float, cantidad_leche: float, costos_adicionales: float, costo_almacenamiento: float, temperatura_almacenamiento: float, humedad_relativa)-> float:
     """
-    
-
     Parameters
     ----------
     costo_leche : float
@@ -82,14 +76,11 @@ def calcular_costo_queso_madurado(costo_leche: float, cantidad_leche: float, cos
     -------
     float
         calcula el costo de todo el queso madurado.
-
     """
     return round(calcular_costo_queso_fresco(costo_leche, cantidad_leche, costos_adicionales) + costo_almacenamiento*calcular_dias_maduracion(cantidad_leche, temperatura_almacenamiento, humedad_relativa), 2)
 
 def calcular_tamanio_porcion(angulo_corte: float) -> float:
     """
-    
-
     Parameters
     ----------
     angulo_corte : float
@@ -99,14 +90,11 @@ def calcular_tamanio_porcion(angulo_corte: float) -> float:
     -------
     float
         calcula el tamaño de la porcion del queso.
-
     """
     return round((angulo_corte/360), 2)
 
 def calcular_costo_porcion_madurado(costo_leche: float, cantidad_leche: float, costos_adicionales: float, costo_almacenamiento: float, temperatura_almacenamiento: float, humedad_relativa: float, angulo_corte: float) -> float:
     """
-    
-
     Parameters
     ----------
     costo_leche : float
@@ -128,6 +116,5 @@ def calcular_costo_porcion_madurado(costo_leche: float, cantidad_leche: float, c
     -------
     float
         calcula el precio de LA PORCION de queso madurado.
-
     """
     return round(calcular_costo_queso_madurado(costo_leche, cantidad_leche, costos_adicionales, costo_almacenamiento, temperatura_almacenamiento, humedad_relativa) * calcular_tamanio_porcion(angulo_corte), 2)
