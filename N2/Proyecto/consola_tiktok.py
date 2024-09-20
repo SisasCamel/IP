@@ -94,7 +94,7 @@ def ejecutar_calcular_promedio_vistas(c1: dict, c2: dict, c3: dict, c4: dict) ->
 
     """
     # TODO11: Implemente la función tal y como se describe en la documentación.
-    pass
+    print(tk.calcular_promedio_vistas(c1, c2, c3, c4))
 
 
 def ejecutar_filtrar_creadores_por_vistas(c1: dict, c2: dict, c3: dict, c4: dict) -> None:

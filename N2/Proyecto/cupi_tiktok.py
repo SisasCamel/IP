@@ -90,20 +90,17 @@ def filtrar_creadores_por_categoria(categoria: str, c1: dict, c2: dict, c3: dict
             parte de la categoría de interés ingresada.
     """
     # TODO2: Implemente la función tal y como se describe en la documentación.
-    resultados = None
-    resultado1 = ""
-    resultado2 = ""
-    resultado3 = ""
-    resultado4 = ""
-    if(categoria in c1["categorias"]):
-        resultado1 = f"{c1["nombre"]}"
-    if(categoria in c2["categorias"]):
-        resultado2 = f"{c2["nombre"]}"
-    if(categoria in c3["categorias"]):
-        resultado3 = f"{c3["nombre"]}"
-    if(categoria in c4["categorias"]):
-        resultado4 = f"{c4["nombre"]}" 
-    resultados = "{:,}".format(resultado1, resultado2, resultado3, resultado4)
+    resultados = ""
+    creadores_encontrados = []
+    if(categoria.lower() in c1["categorias"].lower()):
+        creadores_encontrados.append(c1["nombre"])
+    if(categoria.lower() in c2["categorias"].lower()):
+        creadores_encontrados.append(c2["nombre"])
+    if(categoria.lower() in c3["categorias"].lower()):
+        creadores_encontrados.append(c3["nombre"])
+    if(categoria.lower() in c4["categorias"].lower()):
+        creadores_encontrados.append(c4["nombre"])
+    resultados = ", ".join(creadores_encontrados)
     return resultados
 
 def calcular_promedio_vistas(c1: dict, c2: dict, c3: dict, c4: dict) -> float:
@@ -141,7 +138,16 @@ def filtrar_creadores_por_vistas(minimo_vistas: int, c1: dict, c2: dict, c3: dic
             si ningún creador de contenido supera el umbral.
     """
     # TODO4: Implemente la función tal y como se describe en la documentación.
-    pass
+    creadores_encontrados = []
+    if( c1["vistas"] >= minimo_vistas):
+        creadores_encontrados.append(c1{"nombre"})
+    if(c2["vistas"] >= minimo_vistas):
+        creadores_encontrados.append(c2{"nombre"}) 
+    if(c3["vistas"] >= minimo_vistas):
+        creadores_encontrados.append(c3{"nombre"})
+    if(c4{"vistas"} >= minimo_vistas):
+        creadores_encontrados.append(c4{"nombre"})
+    return ", ".join(creadores_encontrados)
 
 
 def calcular_rating_creador(creador: dict) -> float:
