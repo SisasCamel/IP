@@ -62,13 +62,13 @@ def buscar_creador_por_nombre(nombre: str, c1: dict, c2: dict, c3: dict, c4: dic
     """
     # TODO1: Implemente la función tal y como se describe en la documentación.
     creador = {}
-    if(c1["nombre"] == nombre):
+    if(c1["nombre"].lower() == nombre.lower()):
         creador = c1
-    if(c2["nombre"] == nombre):
+    if(c2["nombre"].lower() == nombre.lower()):
         creador = c2
-    if(c3["nombre"] == nombre):
+    if(c3["nombre"].lower() == nombre.lower()):
         creador = c3
-    if(c4["nombre"] == nombre):
+    if(c4["nombre"].lower() == nombre.lower()):
         creador = c4
     return creador
 
@@ -91,16 +91,32 @@ def filtrar_creadores_por_categoria(categoria: str, c1: dict, c2: dict, c3: dict
     """
     # TODO2: Implemente la función tal y como se describe en la documentación.
     resultados = ""
-    creadores_encontrados = []
+    contador_de_creadores = 0
     if(categoria.lower() in c1["categorias"].lower()):
-        creadores_encontrados.append(c1["nombre"])
+        resultados += f"{c1['nombre']}"
+        contador_de_creadores += 1
     if(categoria.lower() in c2["categorias"].lower()):
-        creadores_encontrados.append(c2["nombre"])
+        if(contador_de_creadores == 0):
+            resultados += f"{c2['nombre']}"
+        else:
+            resultados += f", {c2['nombre']}"
+        contador_de_creadores += 1
+
     if(categoria.lower() in c3["categorias"].lower()):
-        creadores_encontrados.append(c3["nombre"])
+        if(contador_de_creadores == 0):
+            resultados += f"{c3['nombre']}"
+        else:
+            resultados += f", {c3['nombre']}"
+        contador_de_creadores += 1
+
     if(categoria.lower() in c4["categorias"].lower()):
-        creadores_encontrados.append(c4["nombre"])
-    resultados = ", ".join(creadores_encontrados)
+        if(contador_de_creadores == 0):
+            resultados += f"{c4['nombre']}"
+        else:
+            resultados += f", {c4['nombre']}"
+        contador_de_creadores += 1
+    if(contador_de_creadores == 0):
+        resultados = None
     return resultados
 
 def calcular_promedio_vistas(c1: dict, c2: dict, c3: dict, c4: dict) -> float:
@@ -138,16 +154,33 @@ def filtrar_creadores_por_vistas(minimo_vistas: int, c1: dict, c2: dict, c3: dic
             si ningún creador de contenido supera el umbral.
     """
     # TODO4: Implemente la función tal y como se describe en la documentación.
-    creadores_encontrados = []
-    if( c1["vistas"] >= minimo_vistas):
-        creadores_encontrados.append(c1{"nombre"})
-    if(c2["vistas"] >= minimo_vistas):
-        creadores_encontrados.append(c2{"nombre"}) 
-    if(c3["vistas"] >= minimo_vistas):
-        creadores_encontrados.append(c3{"nombre"})
-    if(c4{"vistas"} >= minimo_vistas):
-        creadores_encontrados.append(c4{"nombre"})
-    return ", ".join(creadores_encontrados)
+    resultados = ""
+    contador_de_creadores = 0
+    if(c1["vistas"]>=minimo_vistas):
+        resultados += c1["nombre"]
+        contador_de_creadores += 1
+    if(c2["vistas"]>=minimo_vistas):
+        if(contador_de_creadores == 0):
+            resultados += f"{c2['nombre']}"
+        else:
+            resultados += f", {c2['nombre']}"
+        contador_de_creadores += 1
+        resultados += c2["nombre"]
+    if(c3["vistas"]>=minimo_vistas):
+        if(contador_de_creadores == 0):
+            resultados += f"{c3['nombre']}"
+        else:
+            resultados += f", {c3['nombre']}"
+        contador_de_creadores += 1
+    if(c4["vistas"]>=minimo_vistas):
+        if(contador_de_creadores == 0):
+            resultados += f"{c4['nombre']}"
+        else:
+            resultados += f", {c4['nombre']}"
+        contador_de_creadores += 1
+    if(contador_de_creadores == 0):
+        resultados = "Ninguno"
+    return resultados
 
 
 def calcular_rating_creador(creador: dict) -> float:
@@ -163,7 +196,10 @@ def calcular_rating_creador(creador: dict) -> float:
             decimales. Este valor se encuentra entre 0 y 100.
     """
     # TODO5: Implemente la función tal y como se describe en la documentación.
-    pass
+    S_MAX = 600_000
+    L_MAX = 100_000_000
+    V_MAX = 100_000_000
+    return(round(((creador["seguidores"]/S_MAX)*0.5)+((creador["likes"]/L_MAX)*0.3)+((creador["vistas"]/V_MAX)*0.2), 2))
 
 
 def calcular_puntaje_afinidad(creador: dict, categoria: str, minimo_rating: float, pais: str) -> float:
@@ -183,8 +219,19 @@ def calcular_puntaje_afinidad(creador: dict, categoria: str, minimo_rating: floa
             redondeado a dos cifras decimales.
     """
     # TODO6: Implemente la función tal y como se describe en la documentación.
-    pass
-
+    puntaje = 0
+    if(creador["categorias"] == categoria):
+        puntaje += 3
+    if(creador["pais"] == pais):
+        puntaje += 2
+    elif(creador["pais"] != pais):
+        puntaje -= 1
+    if(calcular_rating_creador(creador) < minimo_rating):
+        puntaje -= 5
+    elif(calcular_rating_creador(creador) >= minimo_rating):
+        puntaje += 2
+    return round(puntaje, 2)
+    
 
 def buscar_creador_favorito(categoria: str, rating: float, pais: str, c1: dict, c2: dict, c3: dict, c4: dict) -> str:
     """
@@ -209,7 +256,53 @@ def buscar_creador_favorito(categoria: str, rating: float, pais: str, c1: dict, 
             (considerando el orden de sus caracteres en el abecedario). 
     """
     # TODO7: Implemente la función tal y como se describe en la documentación.
-    pass
+    afinidad1 = calcular_puntaje_afinidad(c1, categoria, rating, pais)
+    afinidad2 = calcular_puntaje_afinidad(c2, categoria, rating, pais)
+    afinidad3 = calcular_puntaje_afinidad(c3, categoria, rating, pais)
+    afinidad4 = calcular_puntaje_afinidad(c4, categoria, rating, pais)
+    creador = {}
+    creador2 = {}
+    creador_nombre = ""
+    afinidad_mas_grande = afinidad1
+    creador = c1.copy()
+    if(afinidad_mas_grande < afinidad2):
+        afinidad_mas_grande = afinidad2
+        creador = c2.copy()
+    elif(afinidad_mas_grande == afinidad2):
+        creador2 = c2.copy()
+        if(creador["nombre"].lower() < creador2["nombre"].lower()):
+            creador = creador
+        else:
+            creador = creador2.copy()
+    if(afinidad_mas_grande < afinidad3):
+        afinidad_mas_grande = afinidad3
+        creador = c3.copy()
+    elif(afinidad_mas_grande == afinidad3):
+        creador2 = c3.copy()
+        if(creador["nombre"].lower() < creador2["nombre"].lower()):
+            creador = creador
+        else:
+            creador = creador2.copy()
+    if(afinidad_mas_grande < afinidad4):
+        afinidad_mas_grande = afinidad4
+        creador = c4.copy()
+    elif(afinidad_mas_grande == afinidad4):
+        creador2 = c4.copy()
+        if(creador["nombre"].lower() < creador2["nombre"].lower()):
+            creador = creador
+        else:
+            creador = creador2.copy()
+    return(f"{creador['nombre']} con puntaje {afinidad_mas_grande}")
+
+def calcular_anio(fecha: int) -> int:
+    return fecha // 10000
+
+def calcular_mes(fecha: int) -> int:
+    return (fecha - (int(f"{fecha // 10000}_0000"))) // 100
+
+def calcular_dia(fecha: int) -> int:
+    return (fecha - (int(f"{fecha // 10000}_0000")) - (fecha - (int(f"{fecha // 10000}_0000"))) // 100 * 100)
+
 
 
 def buscar_creador_inactivo(fecha_de_referencia: int, c1: dict, c2: dict, c3: dict, c4: dict) -> dict:
@@ -238,5 +331,75 @@ def buscar_creador_inactivo(fecha_de_referencia: int, c1: dict, c2: dict, c3: di
     # TODO8: Implemente la función tal y como se describe en la documentación.
     # TIP: Puede usar una función auxiliar para calcular la cantidad de días
     #      que han pasado entre dos fechas.
-    pass
+
+    año_c1 = fecha_de_referencia - c1["fecha_ultima_publicacion"]
+    año_c2 = fecha_de_referencia - c2["fecha_ultima_publicacion"]
+    año_c3 = fecha_de_referencia - c3["fecha_ultima_publicacion"]
+    año_c4 = fecha_de_referencia - c4["fecha_ultima_publicacion"]
+    creador = {}
+    creador2 = {}
+    diccionario_fechas = {}
+    none = {"none": None}
+    creador = c1.copy()
+    año_mas_viejo = año_c1
+    if(año_mas_viejo < año_c2):
+        año_mas_viejo = año_c2
+        creador = c2.copy()
+    elif(año_mas_viejo == año_c2):
+        creador2 = c2.copy()
+        if(creador["seguidores"] < creador2["seguidores"]):
+            creador = creador
+        else:
+            creador = creador2.copy()
+    if(año_mas_viejo < año_c3):
+        año_mas_viejo = año_c3
+        creador = c3.copy()
+    elif(año_mas_viejo == año_c3):
+        creador2 = c3.copy()
+        if(creador["seguidores"] < creador2["seguidores"]):
+            creador = creador
+        else:
+            creador = creador2.copy()
+    if(año_mas_viejo < año_c4):
+        año_mas_viejo = año_c4
+        creador = c4.copy()
+    elif(año_mas_viejo == año_c4):
+        creador2 = c4.copy()
+        if(creador["seguidores"] < creador2["seguidores"]):
+            creador = creador
+        else:
+            creador = creador2.copy()
+    if( año_mas_viejo< 0):
+        diccionario_fechas = none.copy()
+
+    else:
+        diccionario_fechas["nombre"] = creador["nombre"]
+        if(calcular_mes(fecha_de_referencia) - calcular_mes(creador["fecha_ultima_publicacion"])<0):
+            diccionario_fechas["anios"] = calcular_anio(fecha_de_referencia) - calcular_anio(creador["fecha_ultima_publicacion"]) - 1
+            diccionario_fechas["meses"] = calcular_mes(fecha_de_referencia) + 12 - calcular_mes(creador["fecha_ultima_publicacion"])
+        elif(calcular_mes(fecha_de_referencia) - calcular_mes(creador["fecha_ultima_publicacion"])>=0):
+            diccionario_fechas["anios"] = calcular_anio(fecha_de_referencia) - calcular_anio(creador["fecha_ultima_publicacion"])
+            diccionario_fechas["meses"] = calcular_mes(fecha_de_referencia) - calcular_mes(creador["fecha_ultima_publicacion"])
+        if(calcular_dia(fecha_de_referencia) - calcular_dia(creador["fecha_ultima_publicacion"]) < 0):
+            diccionario_fechas["meses"] -= 1
+            if(calcular_mes(fecha_de_referencia) != 1 or calcular_mes(fecha_de_referencia) != 3 or calcular_mes(fecha_de_referencia) != 5 or calcular_mes(fecha_de_referencia) != 7 or calcular_mes(fecha_de_referencia) != 8 or \
+                calcular_mes(fecha_de_referencia) != 10 or calcular_mes(fecha_de_referencia) != 12):
+                diccionario_fechas["dias"] = (31 - calcular_dia(creador["fecha_ultima_publicacion"]) + calcular_dia(fecha_de_referencia))
+            else:
+                diccionario_fechas["dias"] = (30 - calcular_dia(creador["fecha_ultima_publicacion"]) + calcular_dia(fecha_de_referencia))
+        elif (calcular_dia(fecha_de_referencia) - calcular_dia(creador["fecha_ultima_publicacion"]) >= 0):
+            diccionario_fechas["dias"] = calcular_dia(fecha_de_referencia) - calcular_dia(creador["fecha_ultima_publicacion"])
+    
+    
+    
+    return diccionario_fechas
+
+
+
+    
+
+    
+    
+    
+
 

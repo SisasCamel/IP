@@ -111,7 +111,8 @@ def ejecutar_filtrar_creadores_por_vistas(c1: dict, c2: dict, c3: dict, c4: dict
     # TODO12: Implemente la función tal y como se describe en la documentación.
     #        Solicite al usuario el valor requerido para invocar 
     #        correctamente a la función de la lógica.
-    pass
+    minimo_vistas = int(input("Ingrese la cantidad minima de vistas que quiere filtrar: "))
+    print(tk.filtrar_creadores_por_vistas(minimo_vistas, c1, c2, c3, c4))
 
 
 def ejecutar_calcular_rating_creador(c1: dict, c2: dict, c3: dict, c4: dict) -> None:
@@ -129,7 +130,8 @@ def ejecutar_calcular_rating_creador(c1: dict, c2: dict, c3: dict, c4: dict) -> 
     #        Solicite al usuario el valor requerido para invocar 
     #        correctamente a la función de la lógica.
     # TIP: En esta función se invoca a dos funciones de la lógica.
-    pass
+    creador = input("Ingrese el nombre del creador para el que quiere calcular el rating: ")
+    print(tk.calcular_rating_creador(tk.buscar_creador_por_nombre(creador, c1, c2, c3, c4)))
 
 
 def ejecutar_buscar_creador_favorito(c1: dict, c2: dict, c3: dict, c4: dict) -> None:
@@ -146,7 +148,10 @@ def ejecutar_buscar_creador_favorito(c1: dict, c2: dict, c3: dict, c4: dict) -> 
     # TODO14: Implemente la función tal y como se describe en la documentación.
     #        Solicite al usuario los valores requeridos para invocar 
     #        correctamente a la función de la lógica.
-    pass
+    categoria = input("Ingrese su categoria favorita: ")
+    rating = float(input("Ingrese el rating minimo: "))
+    pais = input("Ingrese su pais: ")
+    print(tk.buscar_creador_favorito(categoria, rating, pais, c1, c2, c3, c4))
 
 
 def ejecutar_buscar_creador_inactivo(c1: dict, c2: dict, c3: dict, c4: dict) -> None:
@@ -172,7 +177,14 @@ def ejecutar_buscar_creador_inactivo(c1: dict, c2: dict, c3: dict, c4: dict) -> 
     # TODO15: Implemente la función tal y como se describe en la documentación.
     #        Solicite al usuario el valor requerido para invocar 
     #        correctamente a la función de la lógica.
-    pass
+    fecha_referencia = int(input("Ingrese la fecha a partir de la cual quiere buscar: "))
+    diccionario_fechas = tk.buscar_creador_inactivo(fecha_referencia, c1, c2, c3, c4)
+    resultado = "No se puede viajar en el tiempo."
+    if("none" in diccionario_fechas):
+       print(resultado)
+    else:
+        resultado = f"El creador de contenido que lleva más tiempo sin publicar es {diccionario_fechas['nombre']} con {diccionario_fechas['anios']} años {diccionario_fechas['meses']} meses y {diccionario_fechas['dias']} días."
+        print(resultado)
 
 
 # Función principal
